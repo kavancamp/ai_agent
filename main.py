@@ -1,11 +1,11 @@
+from dotenv import load_dotenv
 import os
 import sys
-from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 from functions.call_function import call_function, available_functions
 from prompt import system_prompt
-from config import GEMINI_API_KEY, MAX_ITERATIONS
+
 
 def main():
     load_dotenv()
@@ -37,8 +37,8 @@ def main():
     
     iteration_count = 0
     conversation_complete = False
-
-    while not conversation_complete and iteration_count < MAX_ITERATIONS:
+    MAX_ITER = int(os.environ.get("MAX_ITERATIONS", 20)) # Default to 20 if not found
+    while not conversation_complete and iteration_count < MAX_ITER:
         try:
             final_response = gen_content(client, messages, verbose_flag)
             if final_response:

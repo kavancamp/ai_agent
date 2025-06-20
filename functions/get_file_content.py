@@ -1,8 +1,12 @@
 import os
 from google.genai import types
-from config import MAX_CHARS
+from dotenv import load_dotenv
+
+# Load environment variables from the .env file
+load_dotenv()
 
 def get_file_content(working_directory, file_path):
+    max = int(os.environ.get("MAX_CHARS",10000)) #default to 100000 if not provided
     abs_working_directory = os.path.abspath(working_directory)
     
     if file_path:
@@ -21,11 +25,11 @@ def get_file_content(working_directory, file_path):
     
     try:
         with open(target_file, "r") as f_content:
-            file_content_string = f_content.read(MAX_CHARS)
+            file_content_string = f_content.read(max)
 
             # If the file content exceeds MAX_CHARS, add the truncation message
             if len(f_content.read()) > 0:
-                file_content_string += f'\n[...File "{file_path}" truncated at {MAX_CHARS} characters]'
+                file_content_string += f'\n[...File "{file_path}" truncated at {max} characters]'
     except IOError as e:
             return f"Error: Unable to read the file '{file_path}'. Error details: {str(e)}"
     except Exception as e:

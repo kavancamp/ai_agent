@@ -1,9 +1,14 @@
+from dotenv import load_dotenv
+import os
 from functions.get_files_info import get_files_info, schema_get_files_info
 from functions.get_file_content import get_file_content, schema_get_file_content
 from functions.run_python_file import run_python_file, schema_run_python_file
 from functions.write_file import write_file, schema_write_file
 from google.genai import types
-from config import WORK_DIR
+
+
+# Load environment variables from the .env file
+load_dotenv()
 
     # Declare available functions
 available_functions = types.Tool(
@@ -14,9 +19,11 @@ available_functions = types.Tool(
         schema_write_file
     ]
 )
-    
+   
 # Define the call_function
 def call_function(function_call_part, verbose=False):
+    
+    WORK_DIR = os.environ.get("WORKING_DIRECTORY") 
     # Extract function name and arguments
     function_name = function_call_part.name
     function_args = function_call_part.args
